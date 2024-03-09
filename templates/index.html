@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!--link rel="stylesheet" href="style.css"-->
+</head>
+
+<body>
+    <!--h1>Hello! This soon is going to be an admin panel</!--h1>
+    <h2>Here is test button that will show you blacklist if you click on it</h2>
+    <div id="blacklist"></div>
+    <button id="loadBlacklist">Display bl</button>
+
+    
+    <h1><strong>BL Manager</strong></h1>
+
+    <form id="addWordForm">
+        <label for="word">Add Word to Blacklist:</label>
+        <input type="text" id="word" name="word" required>
+        <button type="submit">Add</button>
+    </form>
+    
+    <h2>Current Blacklist:</h2>
+    <ul-- id="blacklist"></ul-->
+
+    <h1>Blacklist</h1>
+    <ul id="blacklist">
+        {% for item in blacklist %}
+        <li>{{ item }} <button class='delete-button' data-item='{{ item }}'>Delete Button</button> </li>
+        {% endfor %}
+    </ul><br>
+
+
+
+    <button type="submit" onclick='refreshContent()' id="refreshBtn">Refresh Blacklist</button><br><br>
+
+    <form id="addWordForm" action="/add_word" method="POST">
+        <label for="newWord">Add word to Blacklist:</label>
+        <input type="text" id="addWordInput" name="word" placeholder="Add word" required>
+        <button type="submit">Add Word</button>
+    </form>
+
+    <form id="removeWordForm">
+        <label for="removeWord">Remove word from Blacklist:</label>
+        <input type="text" id="removeWordInput" placeholder="Remove word">
+        <button type="button" onclick="removeWord()">Remove word</button>
+    </form>
+
+    <script>
+        function removeItem(item) {
+            fetch(`/remove_item/${encodeURIComponent(item)}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log(`${item} removed successfully`);
+                        refreshContent(); // Refresh the content after successful removal
+                    } else {
+                        console.log(`Failed to remove: ${item}`);
+                    }
+                })
+                .catch(error => {
+                    console.log(`Error removing: ${item}: `, error);
+                });
+        }        
+
+        function refreshContent() {
+            fetch('http://localhost:5000/get_blacklist')
+                .then(response => response.json())
+                .then(data => {
+                    // Clear the existing list
+                    var blacklistElement = document.getElementById('blacklist');
+                    blacklistElement.innerHTML = '';
+
+                    // Re-render the updated blacklist
+                    data.blacklist.forEach(item => {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = item;
+                        var deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.onclick = function () {
+                            removeItem(item);
+                        };
+                        listItem.appendChild(deleteButton);
+                        blacklistElement.appendChild(listItem);
+                    });
+                })
+                .catch(error => {
+                    console.log('Error fetching blacklist: ', error);
+                });
+        }
+
+        document.getElementById('addWordForm').addEventListener('submit', function (e) {
+            e.preventDefault(); //prevent default from submission
+            var formData = new FormData(this); //this is for debugging purposes
+
+
+            fetch('http://localhost:5000/add_word', { //send POST request to Flask that's running on my PC on my local post and port - need to change this  
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Word added successfully!');
+                        document.getElementById('addWordForm').reset();
+                        refreshContent();
+                    } else {
+                        console.log('Error adding word');
+                    }
+                })
+                .catch(error => {
+                    console.log('Network error: ', error)
+                });
+        });
+
+
+        function removeWord() {
+            // Get the word from the input field
+            const word = document.getElementById('removeWordInput').value;
+
+            // Create FormData object and append the word
+            const formData = new FormData();
+            formData.append('word', word);
+
+            // Send the AJAX request to remove the word
+            fetch('http://localhost:5000/remove_word', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Word was removed successfully.');
+                        document.getElementById('removeWordForm').reset();
+                        refreshContent()
+                    } else {
+                        console.log('Error removing word.')
+                    }
+                })
+                .catch(error => {
+                    console.log('Network error: ', error)
+                });
+        }
+
+        /*function refreshContent() {
+            // Send AJAX request to the root URL to trigger index() function in Flask
+            fetch('http://localhost:5000/')
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Content refreshed successfully.');
+                        // Reload the page to reflect the updated content
+                        window.location.reload();
+                    } else {
+                        console.log('Error refreshing content.')
+                    }
+                })
+                .catch(error => {
+                    console.log('Network error: ', error)
+                });
+        }*/
+
+        // checking if flask route is working
+        fetch('http://localhost:5000/')
+            .then(response => {
+                if (response.ok) {
+                    console.log('Flask route triggered successfully.');
+                } else {
+                    console.error('Failed to trigger Flask route.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+        // getting and displaying 'blacklist'
+        fetch('http://localhost:5000/get_blacklist')
+            .then(response => response.json())
+            .then(data => {
+                const blacklist = data.blacklist;
+                const blacklistUL = document.getElementById('blacklist');
+
+                // Clear existing content
+                blacklistUL.innerHTML = '';
+
+                // Append each item from the blacklist to the list
+                blacklist.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    blacklistUL.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching blacklist:', error);
+            });
+
+        /*document.getElementById('refreshBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            fetch('http://localhost:5000/get_blacklist')
+                .then(response => response.json())
+                .then(data => {
+                    // Clear the existing list
+                    var blacklistElement = document.getElementById('blacklist');
+                    blacklistElement.innerHTML = '';
+
+                    // Re-render the updated blacklist
+                    data.blacklist.forEach(item => {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = item;
+                        var deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.onclick = function () {
+                            removeItem(item);
+                        };
+                        listItem.appendChild(deleteButton);
+                        blacklistElement.appendChild(listItem);
+                    });
+                })
+                .catch(error => {
+                    console.log('Error fetching blacklist: ', error);
+                });
+        });*/
+        
+
+        document.addEventListener('DOMContentLoaded', function(){
+
+            var deleteButtons = document.querySelectorAll('.delete-button');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    var item = this.getAttribute('data-item');
+                    removeItem(item);
+                });
+            });
+
+            var refreshButton = document.getElementById('refreshBtn');
+            refreshButton.addEventListener('click', function(){
+                refreshContent();
+            });
+        });
+
+        //example - 
+        //fetch('/add_word', { method: 'POST', body: formData })
+
+    </script>
+
+</body>
+
+</html>

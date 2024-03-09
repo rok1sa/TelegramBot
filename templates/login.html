@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+</head>
+<body>
+    <h2>login page<Br> <i> WIP </i></h2><br>
+
+    <form id="loginForm">
+        <label for="userName">Name: </label>
+        <input type="text" name='username' placeholder="Name" id="nameInput" required><br>
+
+        <label for="userPass">Password: </label>
+        <input type="text" name='password' placeholder="Name" id="passInput" required><br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <a href="http://127.0.0.1:5000/" target="blank">link</a>
+
+    <script>
+
+        document.getElementById('loginForm').addEventListener('submit', function(){
+            event.preventDefault();
+
+            var formData = new FormData(this);
+
+            fetch('/login', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sucess) {
+                    alert(data.message);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.log('Error:', error);
+            });
+        });
+
+    </script>
+    
+</body>
+</html>
