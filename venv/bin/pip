@@ -1,4 +1,4 @@
-#!/Users/rokisa/Documents/GitHub/Practice/TelegramBot/venv/bin/python3
+#!/Users/rokisa/Documents/GitHub/Practice/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
