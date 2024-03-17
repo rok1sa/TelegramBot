@@ -15,19 +15,19 @@ CORS(app, origins='*')
 
 # MySQL setup
 db_config = {
-    "user": "root",
-    "password": "PASSWORD",
-    "host": "localhost",
-    "database": "admin",
-    "port": 3306,
+    "user": "admin_jl2l_user",
+    "password": "QoJxbzEakr5pSeXtGVdATWixUGauBO2K",
+    "host": "https://dpg-cnija7ol5elc73fd86jg-a.oregon-postgres.render.com",
+    "database": "admin_jl2l",
+    "port": 5432,
 }
 
 def connect_to_database():
     try:
-        db_connection = mysql.connector.connect(**db_config)
+        db_connection = psycopg2.connect(**db_config)
         print('Connected to the database')
         return db_connection
-    except mysql.connector.Error as err:
+    except psycopg2.Error as err:
         print(f"Error connecting to the database: {err}")
         raise
 
@@ -41,7 +41,6 @@ else:
 def add_word_to_database(bl_word):
     try:
         db_connection = connect_to_database()
-        print('Connected to the db in order to implement add_w_t_db func')
         cursor = db_connection.cursor()
         print(f'Adding word to database: {bl_word}')
 
@@ -51,7 +50,7 @@ def add_word_to_database(bl_word):
         db_connection.commit()
         db_connection.close()
         print(f'Successfully added word: {bl_word}')
-    except mysql.connector.Error as err:
+    except psycopg2.Error as err:
         print(f'Error adding word to the database: {err}')
         raise  # Re-raise the exception to indicate a critical error
 
@@ -67,7 +66,7 @@ def remove_word_from_database(bl_word):
         db_connection.commit()
         db_connection.close()
         print(f'Successfully removed word: {bl_word}')
-    except mysql.connector.Error as err:
+    except psycopg2.Error as err:
         logging.error(f'Error removing word from database: {err}')
         return jsonify(error='Error removing word from database'), 500
         #raise
@@ -153,7 +152,7 @@ def remove_item_from_database(item):
         db_connection.commit()
         db_connection.close()
         print(f'Successfully removed item: {item}')
-    except mysql.connector.Error as err:
+    except psycopg2.Error as err:
         logging.error(f'Error removing word from database: {err}')
         print(f'Error removing item from the database: {err}')
         raise
@@ -170,29 +169,13 @@ def get_blacklist():
     blacklist = get_blacklist_from_database()
     return jsonify(blacklist=blacklist)
 
+@app.route('/js/<path:path>')
+def send_js(path):
+    return send_from_directory('js', path)
+
 @app.route('/')
 def index_render():
     return render_template('index.html')
-
-# pdb config  and authorization
-
-PDB_HOST = 'dpg-cnija7ol5elc73fd86jg-a'
-PDB_NAME = 'admin_jl2l' # it's the db name, not user name
-PDB_USER = 'admin_jl2l_user'
-PDB_PASSWORD = 'QoJxbzEakr5pSeXtGVdATWixUGauBO2K'
-
-def connect_to_postgresql():
-    try:
-        connection = psycopg2.connect(
-            dbname=PDB_NAME,
-            user=PDB_USER,
-            password=PDB_PASSWORD,
-            host=PDB_HOST
-        )
-        print('Connected to the PostgreSQL.')
-    except psycopg2.error as e:
-        print('Connection to PostgreSQL failed.', e)
-    
 
 app.config['DEBUG'] = True
 
