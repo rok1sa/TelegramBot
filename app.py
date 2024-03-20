@@ -11,7 +11,7 @@ print(sys.path)
 
 app = Flask(__name__)
 #app = Flask(__name__, template_folder='templates')
-CORS(app, origins='*')
+CORS(app, origins='https://telegrambot-krvu.onrender.com/')
 
 # MySQL setup
 db_config = {
