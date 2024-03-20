@@ -144,36 +144,6 @@
                 });
         }
 
-        /*function refreshContent() {
-            // Send AJAX request to the root URL to trigger index() function in Flask
-            fetch('http://localhost:5000/')
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Content refreshed successfully.');
-                        // Reload the page to reflect the updated content
-                        window.location.reload();
-                    } else {
-                        console.log('Error refreshing content.')
-                    }
-                })
-                .catch(error => {
-                    console.log('Network error: ', error)
-                });
-        }*/
-
-        // checking if flask route is working
-        /*fetch('https://telegrambot-krvu.onrender.com/')
-            .then(response => {
-                if (response.ok) {
-                    console.log('Flask route triggered successfully.');
-                } else {
-                    console.error('Failed to trigger Flask route.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });*/
-
         // getting and displaying 'blacklist'
         fetch('https://telegrambot-krvu.onrender.com/get_blacklist')
             .then(response => response.json())
@@ -195,35 +165,6 @@
                 console.error('Error fetching blacklist:', error);
             });
 
-        /*document.getElementById('refreshBtn').addEventListener('click', function (e) {
-            e.preventDefault();
-
-            fetch('http://localhost:5000/get_blacklist')
-                .then(response => response.json())
-                .then(data => {
-                    // Clear the existing list
-                    var blacklistElement = document.getElementById('blacklist');
-                    blacklistElement.innerHTML = '';
-
-                    // Re-render the updated blacklist
-                    data.blacklist.forEach(item => {
-                        var listItem = document.createElement('li');
-                        listItem.textContent = item;
-                        var deleteButton = document.createElement('button');
-                        deleteButton.textContent = 'Delete';
-                        deleteButton.onclick = function () {
-                            removeItem(item);
-                        };
-                        listItem.appendChild(deleteButton);
-                        blacklistElement.appendChild(listItem);
-                    });
-                })
-                .catch(error => {
-                    console.log('Error fetching blacklist: ', error);
-                });
-        });*/
-        
-
         document.addEventListener('DOMContentLoaded', function(){
 
             var deleteButtons = document.querySelectorAll('.delete-button');
@@ -239,9 +180,6 @@
                 refreshContent();
             });
         });
-
-        //example - 
-        //fetch('/add_word', { method: 'POST', body: formData })
 
     </script>
 
