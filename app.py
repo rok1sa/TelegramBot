@@ -17,7 +17,7 @@ CORS(app, origins='*')
 db_config = {
     "user": "admin_jl2l_user",
     "password": "QoJxbzEakr5pSeXtGVdATWixUGauBO2K",
-    "host": "https://dpg-cnija7ol5elc73fd86jg-a.oregon-postgres.render.com",
+    "host": "dpg-cnija7ol5elc73fd86jg-a.oregon-postgres.render.com",
     "database": "admin_jl2l",
     "port": 5432,
 }
