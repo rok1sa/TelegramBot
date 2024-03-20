@@ -6,6 +6,7 @@ import sys
 import flask_login
 from flask_sqlalchemy import SQLAlchemy
 import psycopg2
+import os
 
 print(sys.path)
 
@@ -13,13 +14,19 @@ app = Flask(__name__)
 #app = Flask(__name__, template_folder='templates')
 CORS(app, origins='https://telegrambot-krvu.onrender.com/')
 
-# MySQL setup
+
+user_db = os.getenv('USER')
+password_db = os.getenv('PASSWORD')
+host_db = os.getenv('HOST')
+name_db = os.getenv('DATABASE_NAME')
+port_db = os.getenv('PORT')
+
 db_config = {
-    "user": "admin_jl2l_user",
-    "password": "QoJxbzEakr5pSeXtGVdATWixUGauBO2K",
-    "host": "dpg-cnija7ol5elc73fd86jg-a.oregon-postgres.render.com",
-    "database": "admin_jl2l",
-    "port": 5432,
+    "user": user_db,
+    "password": password_db,
+    "host": host_db,
+    "database": name_db,
+    "port": port_db
 }
 
 def connect_to_database():
