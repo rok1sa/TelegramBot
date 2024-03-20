@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, send_from_directory
 from flask_cors import CORS
 import mysql.connector
 import logging
@@ -11,7 +11,7 @@ print(sys.path)
 
 app = Flask(__name__)
 #app = Flask(__name__, template_folder='templates')
-CORS(app, origins='*')
+CORS(app)
 
 # MySQL setup
 db_config = {
@@ -180,4 +180,4 @@ def index_render():
 app.config['DEBUG'] = True
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, host='0.0.0.0', port=10000)

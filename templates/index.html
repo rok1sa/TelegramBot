@@ -51,7 +51,7 @@
 
     <script>
         function removeItem(item) {
-            fetch(`/remove_item/${encodeURIComponent(item)}`, {
+            fetch(`https://telegrambot-krvu.onrender.com/remove_item/${encodeURIComponent(item)}`, {
                 method: 'DELETE'
             })
                 .then(response => {
@@ -68,7 +68,7 @@
         }        
 
         function refreshContent() {
-            fetch('http://localhost:5000/get_blacklist')
+            fetch('https://telegrambot-krvu.onrender.com/get_blacklist')
                 .then(response => response.json())
                 .then(data => {
                     // Clear the existing list
@@ -98,7 +98,7 @@
             var formData = new FormData(this); //this is for debugging purposes
 
 
-            fetch('http://localhost:5000/add_word', { //send POST request to Flask that's running on my PC on my local post and port - need to change this  
+            fetch('https://telegrambot-krvu.onrender.com/add_word', { //send POST request to Flask that's running on my PC on my local post and port - need to change this  
                 method: 'POST',
                 body: formData
             })
@@ -126,7 +126,7 @@
             formData.append('word', word);
 
             // Send the AJAX request to remove the word
-            fetch('http://localhost:5000/remove_word', {
+            fetch('https://telegrambot-krvu.onrender.com/remove_word', {
                 method: 'POST',
                 body: formData
             })
@@ -162,7 +162,7 @@
         }*/
 
         // checking if flask route is working
-        fetch('http://localhost:5000/')
+        /*fetch('https://telegrambot-krvu.onrender.com/')
             .then(response => {
                 if (response.ok) {
                     console.log('Flask route triggered successfully.');
@@ -172,10 +172,10 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-            });
+            });*/
 
         // getting and displaying 'blacklist'
-        fetch('http://localhost:5000/get_blacklist')
+        fetch('https://telegrambot-krvu.onrender.com/get_blacklist')
             .then(response => response.json())
             .then(data => {
                 const blacklist = data.blacklist;
