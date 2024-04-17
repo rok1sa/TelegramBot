@@ -79,7 +79,7 @@ def remove_word_from_database(bl_word):
         #raise
     
 def get_blacklist_from_database():
-    try:
+    tryЖ
         db_connection = connect_to_database()
         if db_connection:
             cursor = db_connection.cursor()
